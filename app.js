@@ -79,8 +79,8 @@ app.get('/trim',async (req,res)=>{
         const duration = req.query.duration;
         const outputFilename = (new Date()).getTime()+'.mp4';//req.query.filename;
     
-        // const command = `ffmpeg -ss ${startTime} -i ${downloadLink} -t ${duration} -c copy ${outputFilename}`;
-        const command = `ffmpeg -ss ${startTime} -i $(youtube-dl -f best -g ${youtubeUrl}) -t ${duration} -c copy ${outputFilename}`;
+        const command = `ffmpeg -ss ${startTime} -i "${downloadLink}" -t ${duration} -c copy ${outputFilename}`;
+        // const command = `ffmpeg -ss ${startTime} -i $(youtube-dl -f best -g ${youtubeUrl}) -t ${duration} -c copy ${outputFilename}`;
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`exec error: ${error}`);
