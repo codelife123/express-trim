@@ -3,9 +3,12 @@ const { exec } = require('child_process');
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require("fs");
+const cors = require('cors');
 const port = process.env.PORT || 3333;
 
 const app = express();
+// Enable CORS for all routes
+app.use(cors());
 
 app.set('view engine', 'ejs');
 
