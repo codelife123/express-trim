@@ -66,6 +66,7 @@ app.get('/trim4',async (req,res)=>{
 
 
 app.get('/trim',async (req,res)=>{
+    console.log('trim endpoint exectuted')
     const youtubeId = req.query.url.split('=')[1]
     const youtubeUrl = req.query.url
     let info = await ytdl.getInfo(youtubeId);
@@ -80,7 +81,6 @@ app.get('/trim',async (req,res)=>{
         const outputFilename = (new Date()).getTime()+'.mp4';//req.query.filename;
     
         const command = `ffmpeg -ss ${startTime} -i "${downloadLink}" -t ${duration} -c copy ${outputFilename}`;
-        // const command = `ffmpeg -ss ${startTime} -i $(youtube-dl -f best -g ${youtubeUrl}) -t ${duration} -c copy ${outputFilename}`;
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.error(`exec error: ${error}`);
@@ -101,7 +101,7 @@ app.get('/trim',async (req,res)=>{
                 }
                 console.log('Trimmed video sent successfully');
                 // Delete the trimmed file once it's sent to the client
-                //exec(`rm ${outputFilename}`);
+                exec(`rm ${outputFilename}`);
             });
             
         });
