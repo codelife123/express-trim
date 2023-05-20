@@ -3,6 +3,7 @@ const { exec } = require('child_process');
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require("fs");
+const port = process.env.PORT || 3333;
 
 const app = express();
 
@@ -167,6 +168,6 @@ app.get('/trim1', (req, res) => {
     });
 });
 
-app.listen(3333, () => {
-    console.log('Server started on port 3000');
+app.listen(port, () => {
+    console.log('Server started on port 3333');
 });
