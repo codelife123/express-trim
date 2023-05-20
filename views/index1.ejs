@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Trim YouTube Video</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Trim YouTube Video</h1>
+
+<form id="trim-form">
+    <label for="url">YouTube URL:</label>
+    <input type="text" id="url" name="url"><br>
+
+    <label for="start-time">Start Time:</label>
+    <input type="text" id="start-time" name="start_time"><br>
+
+    <label for="duration">Duration (in seconds):</label>
+    <input type="number" id="duration" name="duration"><br>
+
+    <input type="submit" value="Trim">
+</form>
+
+<div id="output"></div>
+
+<script>
+    $(function() {
+        $('#trim-form').submit(function(event) {
+            event.preventDefault();
+            var form = $(this);
+            var url = form.find('#url').val();
+            var start_time = form.find('#start-time').val();
+            var duration = form.find('#duration').val();
+            var output = $('#output');
+
+            $.ajax({
+                url: '/trim',
+                type: 'GET',
+                data: {
+                    url: url,
+                    start_time: start_time,
+                    duration: duration,
+                },
+                beforeSend: function() {
+                    output.text('Trimming video...');
+                },
+                success: function(data) {
+                    output.html('<a href="' + data.trimmedUrl + '">Download trimmed video</a>');
+                },
+                error: function() {
+                    output.text('Error trimming video');
+                },
+            });
+        });
+    });
+</script>
+</body>
+</html>

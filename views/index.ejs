@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Trim YouTube Video</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css"  crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .bg-custom-primary-color{
+      background-color: #F43F5E;
+    }
+    .custom-primary-color {
+      color: #F43F5E;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+<div class="container mx-auto py-10">
+  <h1 class="text-4xl text-center font-bold mb-10 custom-primary-color">Trim YouTube Video</h1>
+
+  <form id="trim-form" class="max-w-sm mx-auto">
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="url">YouTube URL:</label>
+      <input class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="url" name="url">
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="start-time">Start Time:</label>
+      <input class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="start-time" name="start_time">
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2" for="duration">Duration (in seconds):</label>
+      <input class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" id="duration" name="duration">
+    </div>
+
+    <div class="flex justify-center">
+      <button class="bg-custom-primary-color hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Trim</button>
+    </div>
+  </form>
+
+  <div id="output" class="text-center mt-10"></div>
+</div>
+
+<script>
+  $(function() {
+    $('#trim-form').submit(function(event) {
+      event.preventDefault();
+
+
+
+      var form = $(this);
+      var url = form.find('#url').val();
+      var start_time = form.find('#start-time').val();
+      var duration = form.find('#duration').val();
+      var output = $('#output');
+
+      fetch('/trim?'+ new URLSearchParams({
+        url: url,
+        start_time: start_time,
+        duration: duration,
+      }))
+              .then(response => response.blob())
+              .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'trimmed.mp4';
+                document.body.appendChild(a);
+                a.click();
+              });
+
+      return;
+
+
+      $.ajax({
+        url: '/trim',
+        type: 'GET',
+        data: {
+          url: url,
+          start_time: start_time,
+          duration: duration,
+        },
+        beforeSend: function() {
+          output.text('Trimming video...');
+        },
+        success: function(data) {
+          //output.html('<a href="' + data.url + '">Download trimmed video</a>');
+
+          const blob = new Blob([data], { type: 'video/mp4' });
+          const url = window.URL.createObjectURL(blob);
+          output.html('<a href="' + url + '" download="trimmed.mp4">Download trimmed video</a>');
+        },
+        error: function() {
+          output.text('An error occurred while trimming the video.');
+        },
+      });
+    });
+  });
+
+</script>
+</body>
+</html>
