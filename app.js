@@ -145,7 +145,6 @@ app.get('/trim2', (req, res) => {
                 console.error(`Error sending trimmed video: ${err}`);
                 return res.status(500).send('Error sending trimmed video');
             }
-            
             console.log('Trimmed video sent successfully');
             // Delete the trimmed file once it's sent to the client
             //exec(`rm ${outputFilename}`);
