@@ -67,7 +67,7 @@ app.get('/trim4',async (req,res)=>{
     });
 })
 
-
+// original endpoint
 app.get('/trim',async (req,res)=>{
     console.log('trim endpoint exectuted')
     const youtubeId = req.query.url.split('=')[1]
